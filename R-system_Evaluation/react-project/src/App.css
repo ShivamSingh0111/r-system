@@ -1,0 +1,20 @@
+ul{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+margin: auto;
+  gap: 5px;
+  /* border: 1px solid teal; */
+}
+
+li{
+  /* border: 1px solid black; */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  
+  list-style: none;
+width: 100%;
+}
+
+li:hover{
+background-color: rgb(186, 230, 230);
+opacity: 1;
+}
