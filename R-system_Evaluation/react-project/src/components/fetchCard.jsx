@@ -14,8 +14,8 @@ const FetchCard = () => {
         let res = await fetch('https://jsonplaceholder.typicode.com/posts');
         let data = await res.json();
        
-        setState([...data]);
-        setFilteredData(finalData);
+        setState(data);
+        setFilteredData(data);
         setLoading(false)
      
     } catch (error) {
@@ -33,31 +33,18 @@ const FetchCard = () => {
 
 
     function handelsortByTitle(e){
-        console.log(typeof e.target.value)
-      if(e.target.value=="asc"){
-         sortBytitle.sort((a,b)=>{
-            if(a.title>b.title){
-                return a.title-b.title
-            }else{
-                return b.title-a.title;
-            }
-         })
-        console.log(asc)
-      }else if(e.target.value=="desc"){
-        sortBytitle.sort((a,b)=>{
-            if(a.title>b.title){
-                return a.title-b.title
-            }else{
-                return b.title-a.title;
-            }
-         })
-      }
-      setState([...sortBytitle]);
+        const value = e.target.value;
+        if (value === "asc") {
+          setFilteredData((prevData) => [...prevData].sort((a, b) => a.id - b.id));
+        } else if (value === "desc") {
+          setFilteredData((prevData) => [...prevData].sort((a, b) => b.id - a.id));
+        }
+        setsortOrder(value);
     }
     if(loading)return <p>lodaing....</p>
     function handleFilter(e) {
         const filter = e.target.value.toLowerCase();
-        const filteredData = data.filter((item) => item.title.toLowerCase().includes(filter));
+        const filteredData = state.filter((item) => item.title.toLowerCase().includes(filter));
         setFilteredData(filteredData);
       }
   return (
@@ -68,10 +55,11 @@ const FetchCard = () => {
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
       </select>
-        <ChildCard data={state}/>
+        <ChildCard data={filteredData}/>
        
     </div>
   )
 }
 
 export default FetchCard;
+
