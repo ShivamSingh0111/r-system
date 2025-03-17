@@ -2,18 +2,25 @@ import React, { useEffect, useState } from 'react'
 import ChildCard from './ChildCard';
 
 const FetchCard = () => {
-    const [state, setState] = useState([])
-    var sortBytitle=[];
+    const [state, setState] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
+    const [sortOrder, setsortOrder] = useState(null);
+    const [loading, setLoading] = useState(true);
+   
     // fetch the data from the Api
    async function fetchData(){
+    setLoading(true)
     try {
         let res = await fetch('https://jsonplaceholder.typicode.com/posts');
         let data = await res.json();
-        sortBytitle =[...data];
+       
         setState([...data]);
-         
+        setFilteredData(finalData);
+        setLoading(false)
+     
     } catch (error) {
         console.log(error);
+        setLoading(false)
     }
           
     }
@@ -30,31 +37,37 @@ const FetchCard = () => {
       if(e.target.value=="asc"){
          sortBytitle.sort((a,b)=>{
             if(a.title>b.title){
-                return 1;
+                return a.title-b.title
             }else{
-                return -1;
+                return b.title-a.title;
             }
          })
         console.log(asc)
       }else if(e.target.value=="desc"){
         sortBytitle.sort((a,b)=>{
-            if(a.title<b.title){
-                return 1;
+            if(a.title>b.title){
+                return a.title-b.title
             }else{
-                return -1;
+                return b.title-a.title;
             }
          })
       }
       setState([...sortBytitle]);
     }
+    if(loading)return <p>lodaing....</p>
+    function handleFilter(e) {
+        const filter = e.target.value.toLowerCase();
+        const filteredData = data.filter((item) => item.title.toLowerCase().includes(filter));
+        setFilteredData(filteredData);
+      }
   return (
     <div>
-
-        <select onChange={handelsortByTitle}>
-            <option value="">sortByTitle</option>
-            <option value="asc">Asc</option>
-            <option value="des">Desc</option>
-        </select>
+<input type="text" placeholder="Search" onChange={handleFilter} className="inputhandler" />
+<select name="" id="" value={sortOrder} onChange={handelsortByTitle} className="selection">
+        <option value="">Sort by user id</option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
         <ChildCard data={state}/>
        
     </div>
